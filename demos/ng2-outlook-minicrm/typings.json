@@ -1,7 +1,17 @@
 {
   "globalDependencies": {
+    "colors": "registry:dt/colors#0.6.0-1+20160501135139",
     "core-js": "registry:dt/core-js#0.0.0+20160317120654",
+    "debug": "registry:dt/debug#0.0.0+20160317120654",
+    "express": "registry:dt/express#4.0.0+20160317120654",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
+    "express-session": "registry:dt/express-session#0.0.0+20160331200931",
+    "form-data": "registry:dt/form-data#0.0.0+20160316155526",
     "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",
-    "node": "registry:dt/node#4.0.0+20160509154515"
+    "mime": "registry:dt/mime#0.0.0+20160316155526",
+    "node": "registry:dt/node#4.0.0+20160509154515",
+    "office-js": "registry:dt/office-js#0.0.0+20160608071856",
+    "request": "registry:dt/request#0.0.0+20160524135346",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160501131543"
   }
 }

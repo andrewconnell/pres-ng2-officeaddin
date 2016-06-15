@@ -1,0 +1,19 @@
+# Spin up a working version of the demo site on https://localhost using the
+#   image andrewconnell/pres-ng2-officeaddin:latest. Also spin up a modified
+#   version of VorlonJS (http://vorlonjs.com) tweaked for Office Add-in dev.
+#
+# Start this using $ docker-compose up
+
+version: '2'
+services:
+  webapp:
+    # use the image that's clean, ready to do the live coding demo
+    image: andrewconnell/pres-ng2-officeaddin:ng2-demo-start
+    depends_on:
+      - vorlonjs
+    ports:
+      - "443:3433"
+  vorlonjs:
+    image: andrewconnell/vorlonjs:latest
+    ports:
+      - "1337:1337"

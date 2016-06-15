@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:type="MailApp">
+  <Id>1c4f0221-6482-4665-84e0-42fc71cb9a38</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Andrew Connell</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="MiniCRM [ng2]"/>
+  <Description DefaultValue="This app looks at the names in the body of the email for matching customers."/>
+  <IconUrl DefaultValue="https://localhost/images/app-icon.png"/>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="Mailbox" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://localhost/"/>
+        <RequestedHeight>225</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadItem</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="And">
+    <Rule xsi:type="ItemIs"
+          ItemType="Message"
+          FormType="Read"/>
+    <Rule xsi:type="ItemHasRegularExpressionMatch"
+          PropertyName="BodyAsHTML"
+          RegExName="PossibleName"
+          RegExValue="\b[A-Z][a-z]+\b"/>
+  </Rule>
+</OfficeApp>

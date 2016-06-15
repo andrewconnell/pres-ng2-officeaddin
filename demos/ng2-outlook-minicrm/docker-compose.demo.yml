@@ -1,0 +1,24 @@
+# Spin up a working version of the demo site on https://localhost using the
+#   image andrewconnell/pres-ng2-officeaddin:latest. However instead of running
+#   the working demo, map the path where the demo resides within the container
+#   to the local path where the demo code is... but use the container's
+#   node_modules & typings folders to avoid reinstalling NPM & type defs
+#   over slow presentation venue internet. Also start the demo in dev mode.
+#
+# Start this using $ docker-compose -f docker-compose.demo.yml up
+
+version: '2'
+services:
+  webapp:
+    # use the image that's clean, ready to do the live coding demo
+    image: andrewconnell/pres-ng2-officeaddin:ng2-demo-start
+    ports:
+      - "443:3433"
+    # map the current folder root on HOST => CONTAINER so container will
+    #   use files from HOST as I code locally
+    # but leave node_modules & typings in the container so don't have to
+    #   download them again
+    volumes:
+      - ./src:/ac/demo/src
+    # run TSC in watch mode & node in debug mode
+    command: npm run dev
