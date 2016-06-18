@@ -1,8 +1,19 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
+
+import { LogService } from './services/logService';
+import { CustomerCenterComponent } from './customers/index';
 
 @Component({
-    selector: 'my-app',
-    template: '<h1>My First Angular 2 App</h1>'
+  moduleId: module.id,
+  selector: 'my-app',
+  directives: [
+    CustomerCenterComponent
+  ],
+  providers: [
+    LogService
+  ],
+  template: `<minicrm-customer-center></minicrm-customer-center>`
 })
-
-export class AppComponent { }
+export class AppComponent {
+  constructor() { }
+}

@@ -10,10 +10,18 @@
     <script src="/vendor/reflect-metadata/Reflect.js"></script>
     <script src="/vendor/systemjs/dist/system.src.js"></script>
 
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/Office.js" type="application/javascript"></script>
+
+    <!-- office ui fabric -->
+    <link rel="stylesheet" href="/vendor/office-ui-fabric/dist/css/fabric.min.css">
+    <link rel="stylesheet" href="/vendor/office-ui-fabric/dist/css/fabric.components.min.css">
+
     <script src="/js/systemjs.config.js"></script>
     <script>
       System.import('app').catch(function(err){ console.error(err); });
     </script>
+
+    <script src="https://localhost:1337/vorlon.js"></script>
   </head>
 
   <body>
