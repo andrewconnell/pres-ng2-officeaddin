@@ -30,8 +30,8 @@ This will spin up two containers:
   > VorlonJS is a remote debugging utility that is not required for the demo but shows cool remote debugging capabilities.
 
 To run this, you need Docker installed which is available in multiple formats:
+- **Docker for Mac & Windows** - install Docker on your OS (this is the easiest way)... get it hereP https://www.docker.com/products/overview
 - **Docker in a VM on your laptop** - steps for all platforms here: [Get Started with Docker](https://docs.docker.com/mac/)
-- **Docker for Mac & Windows Beta** - you will need to apply & get access to the private beta program to install Docker on your OS. More info in this post: [Docker for Mac & Windows Beta](https://blog.docker.com/2016/03/docker-for-mac-windows-beta/)
 
 Side-load the Office Add-in for Outlook into your Outlook Web App by uploading the file located at `https://localhost/app.xml`.
 
