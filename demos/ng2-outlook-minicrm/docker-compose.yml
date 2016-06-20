@@ -7,6 +7,7 @@
 version: '2'
 services:
   webapp:
+    build: .
     # use the image that's clean, ready to do the live coding demo
     image: andrewconnell/pres-ng2-officeaddin:ng2-demo-start
     depends_on:
