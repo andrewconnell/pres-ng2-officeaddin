@@ -1,0 +1,22 @@
+{
+  "ACDEMO - 04 - customer-center.component.css":{
+    "prefix": "acd-04-customer-center.component.css",
+    "body": [
+      "#addinHeading {",
+      "  margin: 0 0 15 0;",
+      "  padding: 2 10 2 10;",
+      "}"
+    ],
+    "description": ""
+  },
+  "ACDEMO - 08 - customer-list.component.css":{
+    "prefix": "acd-08-customer-list.component.css",
+    "body": [
+      ".customers {",
+      "  float:left;",
+      "  margin-right:5px;",
+      "}"
+    ],
+    "description": ""
+  }
+}
