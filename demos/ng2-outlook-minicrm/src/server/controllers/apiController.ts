@@ -1,19 +1,19 @@
 import * as debug from 'debug';
 let log: debug.IDebugger = debug('ng2minicrm:apiController');
 
-import {INorthwindRestCustomer} from '../models/INorthwindRestCustomer';
-import {ICustomer} from '../../shared/models/ICustomer';
-import {Application, Request, Response} from 'express';
+import { INorthwindRestCustomer } from '../models/INorthwindRestCustomer';
+import { ICustomer } from '../../shared/models/ICustomer';
+import { Application, Request, Response } from 'express';
 import * as request from 'request';
 import * as http from 'http';
 
 export class ApiController {
-  private static NW_CUSTOMER_HTTP_ENDPOINT = 'http://services.odata.org/V3/Northwind/Northwind.svc/Customers';
+  private static NW_CUSTOMER_HTTP_ENDPOINT: string = 'http://services.odata.org/V3/Northwind/Northwind.svc/Customers';
   private static NW_CUSTOMER_HTTP_REQUEST_HEADER: request.CoreOptions = {
-    method: 'GET',
     headers: {
       'Accept': 'application/json;odata=verbose'
-    }
+    },
+    method: 'GET'
   };
 
 
@@ -24,7 +24,7 @@ export class ApiController {
   /**
    * Setup routing for controller.
    */
-  public loadRoutes() {
+  public loadRoutes(): void {
     log('configuring routes');
 
     // get all customers
@@ -42,17 +42,17 @@ export class ApiController {
    * @param request {express.Request} HTTP request object.
    * @param response {express.Response} HTTP response object.
    */
-  private handleGetCustomers(expRequest: Request, expResponse: Response) {
+  private handleGetCustomers(expRequest: Request, expResponse: Response): void {
     log('handle HTTP GET /api/customers');
 
     // build query
-    let queryEndpoint = ApiController.NW_CUSTOMER_HTTP_ENDPOINT;
+    let queryEndpoint: string = ApiController.NW_CUSTOMER_HTTP_ENDPOINT;
 
     let options: request.CoreOptions = {
-      method: 'GET',
       headers: {
         'Accept': 'application/json;odata=verbose'
-      }
+      },
+      method: 'GET'
     };
 
     // execute query
@@ -77,11 +77,11 @@ export class ApiController {
           let nwCustomers: INorthwindRestCustomer[] = <INorthwindRestCustomer[]>(JSON.parse(body)).d.results;
           for (let nwCustomer of nwCustomers) {
             customers.push(<ICustomer>{
+              companyName: nwCustomer.CompanyName,
               id: nwCustomer.CustomerID,
               name: nwCustomer.ContactName,
-              title: nwCustomer.ContactTitle,
-              companyName: nwCustomer.CompanyName,
-              phone: nwCustomer.Phone
+              phone: nwCustomer.Phone,
+              title: nwCustomer.ContactTitle
             });
           }
 
@@ -98,7 +98,7 @@ export class ApiController {
    * @param request {express.Request} HTTP request object.
    * @param response {express.Response} HTTP response object.
    */
-  private handleGetCustomerByName(expRequest: Request, expResponse: Response) {
+  private handleGetCustomerByName(expRequest: Request, expResponse: Response): void {
     log('handle HTTP GET /api/customers');
 
     // get query params
@@ -115,7 +115,7 @@ export class ApiController {
     });
 
     // build query
-    let queryEndpoint = ApiController.NW_CUSTOMER_HTTP_ENDPOINT
+    let queryEndpoint: string = ApiController.NW_CUSTOMER_HTTP_ENDPOINT
       + '?$select=CustomerID,ContactName,ContactTitle,CompanyName,Phone'
       + '&$filter=' + filter;
 
@@ -142,11 +142,11 @@ export class ApiController {
           if (nwCustomers.length > 0) {
             for (let nwCustomer of nwCustomers) {
               customers.push(<ICustomer>{
+                companyName: nwCustomer.CompanyName,
                 id: nwCustomer.CustomerID,
                 name: nwCustomer.ContactName,
-                title: nwCustomer.ContactTitle,
-                companyName: nwCustomer.CompanyName,
-                phone: nwCustomer.Phone
+                phone: nwCustomer.Phone,
+                title: nwCustomer.ContactTitle
               });
             }
           }
@@ -157,14 +157,14 @@ export class ApiController {
       });
   }
 
-  private handleGetCustomerById(expRequest: Request, expResponse: Response) {
+  private handleGetCustomerById(expRequest: Request, expResponse: Response): void {
     log('handle HTTP GET /api/customers');
 
     // get query params
-    let customerId = expRequest.params.customerId;
+    let customerId: string = expRequest.params.customerId;
 
     // build query
-    let queryEndpoint = ApiController.NW_CUSTOMER_HTTP_ENDPOINT
+    let queryEndpoint: string = ApiController.NW_CUSTOMER_HTTP_ENDPOINT
       + '?$select=CustomerID,ContactName,ContactTitle,CompanyName,Phone'
       + '&$filter=CustomerID eq \'' + customerId + '\'';
 
@@ -191,11 +191,11 @@ export class ApiController {
           if (nwCustomers.length > 0) {
             for (let nwCustomer of nwCustomers) {
               customers.push(<ICustomer>{
+                companyName: nwCustomer.CompanyName,
                 id: nwCustomer.CustomerID,
                 name: nwCustomer.ContactName,
-                title: nwCustomer.ContactTitle,
-                companyName: nwCustomer.CompanyName,
-                phone: nwCustomer.Phone
+                phone: nwCustomer.Phone,
+                title: nwCustomer.ContactTitle
               });
             }
           }

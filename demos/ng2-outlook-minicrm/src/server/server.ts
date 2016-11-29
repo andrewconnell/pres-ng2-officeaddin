@@ -32,18 +32,18 @@ app.set('views', __dirname + '/views');
 
 // load UX and API controllers
 log('initialize controllers');
-let controllers = new Controllers(app);
+let controllers: Controllers = new Controllers(app);
 controllers.init();
 
 // setup ssl self hosting (use the same certs from browsersync)
-let https_options = {
-  key: fs.readFileSync(__dirname + '/../../node_modules/browser-sync/lib/server/certs/server.key'),
-  cert: fs.readFileSync(__dirname + '/../../node_modules/browser-sync/lib/server/certs/server.crt')
+let httpsOptions: https.ServerOptions = {
+  cert: fs.readFileSync(__dirname + '/../../node_modules/browser-sync/lib/server/certs/server.crt'),
+  key: fs.readFileSync(__dirname + '/../../node_modules/browser-sync/lib/server/certs/server.key')
 };
-let httpServerPort = process.env.PORT || 3433;  // use server value (for Azure) or local port
+let httpServerPort: number = process.env.PORT || 3433;  // use server value (for Azure) or local port
 
 // create & startup HTTPS webserver
-https.createServer(https_options, app)
+https.createServer(httpsOptions, app)
      .listen(httpServerPort);
 
 console.log(colors.cyan('+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+'));
