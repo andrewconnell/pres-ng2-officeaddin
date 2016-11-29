@@ -1,4 +1,4 @@
-FROM node:5
+FROM node:6.9.1
 
 # create folders, group & user
 RUN mkdir -p /ac/demo /home/nodejs && \
@@ -8,7 +8,7 @@ RUN mkdir -p /ac/demo /home/nodejs && \
 
 # add NPM & Typings configs, install all modules & TypeScript type defs
 WORKDIR /ac/demo
-COPY package.json typings.json tsconfig.json /ac/demo/
+COPY package.json tsconfig.json /ac/demo/
 RUN npm install --unsafe-perm=true
 
 # copy codebase for app into container

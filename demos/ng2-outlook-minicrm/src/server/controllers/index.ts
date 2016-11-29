@@ -9,7 +9,7 @@ import { HomeController } from './homeController';
 export class Controllers {
   constructor(private app: express.Application) {}
 
-  public init() {
+  public init(): void {
     log('instatiate controllers');
     // instatiate each controller
     let api: ApiController = new ApiController(this.app);

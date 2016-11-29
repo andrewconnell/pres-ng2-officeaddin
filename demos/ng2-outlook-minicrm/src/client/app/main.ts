@@ -1,30 +1,41 @@
-import { bootstrap }    from '@angular/platform-browser-dynamic';
-import { HTTP_PROVIDERS } from '@angular/http';
-import { AppComponent } from './app.component';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { LogService } from './services/logService';
+import { AppModule } from './app.module';
 
-export class Ng2App {
-  constructor(private logService: LogService) {
+/**
+ * Utility to initialize office.js for hosting Office app, then
+ * load the Angular 2 application.
+ *
+ * @export
+ * @class AppLoader
+ */
+export class AppLoader {
+  constructor() {
     this.initOfficeAddin();
   }
 
-  private initOfficeAddin(): void {
-    this.logService.info('addin loaded');
 
+  /**
+   * Initialize the Office Addin. Must call the `Office.initialize()` method & have it complete within 5s of the Addin
+   * being called by the hosting Office client app. That should trigger a callback that loads of the Angular application.
+   *
+   * @private
+   *
+   * @memberOf AppLoader
+   */
+  private initOfficeAddin(): void {
+    // init the Office Addin
     Office.initialize = (reason: Office.InitializationReason) => {
       // write out the thing that caused it
-      this.logService.info('initializing Office.js');
+      console.log('initializing Office.js');
 
       // bootstrap the angular app
-      bootstrap(AppComponent, [HTTP_PROVIDERS])
-        .then(success => this.logService.info('ng2 bootstrap success', success))
-        .catch(error => this.logService.error('ng2 bootstrap error', error));
+      platformBrowserDynamic().bootstrapModule(AppModule)
+        .then(success => console.log('ng2 bootstrap success', success))
+        .catch(error => console.error('ng2 bootstrap error', error));
     };
   }
 }
 
 // create instance of the app
-let logService: LogService = new LogService();
-logService.category = 'bootstrap';
-let ng2app: Ng2App = new Ng2App(logService);
+let ng2app: AppLoader = new AppLoader();

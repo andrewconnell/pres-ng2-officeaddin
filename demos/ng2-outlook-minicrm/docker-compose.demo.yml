@@ -10,8 +10,9 @@
 version: '2'
 services:
   webapp:
+    build: .
     # use the image that's clean, ready to do the live coding demo
-    image: andrewconnell/pres-ng2-officeaddin:ng2-demo-start
+    image: andrewconnell/pres-ng2-officeaddin:latest
     ports:
       - "443:3433"
     # map the current folder root on HOST => CONTAINER so container will
@@ -22,3 +23,7 @@ services:
       - ./src:/ac/demo/src
     # run TSC in watch mode & node in debug mode
     command: npm run dev
+  vorlonjs:
+    image: andrewconnell/vorlonjs:latest
+    ports:
+      - "1337:1337"

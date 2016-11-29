@@ -1,6 +1,7 @@
 # `ng2-outlook-minicrm` Demo Cheat Sheet
 
-> heavy use of vscode snippets in this demo
+> heavy use of VSCode snippets in this demo
+>
 > all have the prefix `acd-##-`
 
 ## pre-demo
@@ -9,286 +10,283 @@ Get laptop ready before the session
 
 1. Make sure laptop has copies of the docker images
 
-  ```shell
-  docker pull andrewconnell/vorlonjs
-  docker pull andrewconnell/pres-ng2-officeaddin
-  ```
+    ```shell
+    $ docker pull andrewconnell/vorlonjs
+    $ docker pull andrewconnell/pres-ng2-officeaddin
+    ```
 
 1. reset demo folder => clean angular 2
 
-  - get the SHA for the commit & reset
+    - switch to the live demo branch
 
-    ```shell
-    git log
-    git reset <COMMIT-SHA> .
-    ```
+      ```shell
+      $ git checkout ng2-demo-start
+      ```
 
-  - undo the three files that we'll change in the demo
+    - remove all stuff that will be added
 
-    ```shell
-    git checkout -- demos/ng2-outlook-minicrm/src/client/index.html demos/ng2-outlook-minicrm/src/client/app/app.component.ts demos/ng2-outlook-minicrm/src/client/app/main.ts
-    ```
+      ```shell
+      $ git clean -fdx
+      ```
 
-  - remove all stuff that will be added
+    - get all npm packages
 
-    ```shell
-    git clean -fdx
-    ```
+      ```shell
+      $ npm install
+      ```
 
-  - verify works
+    - verify works
 
-    ```shell
-    cd demos/ng2-outlook-minicrm
-    npm start
-    ```
+      ```shell
+      $ cd demos/ng2-outlook-minicrm
+      $ npm run build
+      $ npm start
+      ```
 
-  > to get back to the endpoint git repo:
-  > ```
-  > git reset --hard HEAD
-  > ```
-
-1. open demo snippets in seperate window / vscode snippets
 1. ipad with demo notes
 
 ## demo
 
 1. explain scenario
 
-  - email shows customers in company CRM
-  - mocking CRM using northwind in OData.org
-  - NW is HTTP, but office will only do HTTPS
-  - Node.js API used as HTTPS proxy => HTTP service
+    - email shows customers in company CRM
+    - mocking CRM using northwind in OData.org
+    - Northwind is HTTP, but office will only do HTTPS
+    - Node.js API used as HTTPS proxy => HTTP service
 
 1. show working app - run the app
 
-  this will run the app 100% contained within the container **andrewconnell/pres-ng2-officeaddin**
+    this will run the app 100% contained within the container **andrewconnell/pres-ng2-officeaddin**
 
-    ```shell
-    docker-compose up
-    ```
+      ```shell
+      $ npm run docker:start
+      ```
 
 1. run the demo in the dev container
 
-  this will run the app using the container **andrewconnell/pres-ng2-officeaddin** as the runtime & host of NPM modules & typings, but map the `/src` folder in the container to the `/src` folder in this repo on the HOST machine 
+    this will run the app using the container **andrewconnell/pres-ng2-officeaddin** as the runtime & host of NPM modules & typings, but map the `/src` folder in the container to the `/src` folder in this repo on the HOST machine 
 
-    ```shell
-    docker-compose -f docker-compose.demo.yml
-    ```
+      ```shell
+      $ npm run docker:dev
+      ```
+
+    1. show (with no errors) the app running outside of outlook: https://localhost
+    1. Walk though the source code explaining how it works
+
+        - `package.json`
+          - dependencies
+          - `@types`
+          - NPM scripts
+        - `tsconfig.json`
+          - experimental stuff for TypeScript & Angular
+        - docker
+          - `Dockerfile`
+          - `docker-compose*.yml`
 
 1. look at `app.xml`
-
 1. run in OWA, show doesn't work
 
-  - **[[acd-01]]** - add `office.js` to `index.html`
+    - **[[acd-01]]** - add `office.js` to `index.html`
 
-    ```html
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/Office.js" type="application/javascript"></script>
-    ```
+      ```html
+      <script src="https://appsforoffice.microsoft.com/lib/1/hosted/Office.js" type="application/javascript"></script>
+      ```
 
-  - update `main.ts` to:
+    - update `main.ts` to:
+      <!-- [[SNIPPET]] ACD-02 -->
+      
+      ```typescript
+      export class AppLoader {
+        constructor() {
+          this.initOfficeAddin();
+        }
+        private initOfficeAddin(): void {
+          Office.initialize = (reason: Office.InitializationReason) => {
+            console.log('initializing Office.js');
 
-    ```typescript
-    export class Ng2App {
-      constructor() {
-        this.initOfficeAddin();
+            platformBrowserDynamic().bootstrapModule(AppModule)
+              .then(success => console.log('ng2 bootstrap success', success))
+              .catch(error => console.error('ng2 bootstrap error', error));
+          };
+        }
       }
+      let ng2app: AppLoader = new AppLoader();
+      ```
 
-      private initOfficeAddin(): void {
-        Office.initialize = (reason: Office.InitializationReason) => {
-          bootstrap(AppComponent);
-        };
+1. test app in Outlook to see if it's loading iwthout errors
+1. build first component: `customer-center.component.ts`
+
+    - create subfolder: `/src/client/app/customers`
+    - create file: `customer-center.component.ts`
+
+      ```typescript
+      import { Component, OnInit } from '@angular/core';
+
+      @Component({
+        moduleId: module.id,
+        selector: 'minicrm-customer-center',
+        styleUrls: ['customer-center.component.css'],
+        templateUrl: 'customer-center.component.html'
+      })
+      export class CustomerCenterComponent implements OnInit {
+        public ngOnInit(): void {
+          console.log('ngOnInit: CustomerCenterComponent');
+        }
       }
-    }
-    let ng2app: Ng2App = new Ng2App(logService);
-    ```
+      ```
 
-1. detour to Anuglar's emphasis on DI... create log service
+    - create file: `customer-center.component.html`
 
-  - add `services/logService.ts`:
+      ```html
+      <!-- [[SNIPPET]] ACD-03 -->
+      <div id="addinHeading"
+          class='ms-font-xl ms-bgColor-themePrimary ms-fontColor-white'>
+        <div>Possible customers found in this email...</div>
+      </div>
+      ```
+
+    - create file: `customer-center.component.css`
+
+      ```css
+      /* [[SNIPPET]] ACD-04 */
+      #addinHeading {
+        margin: 0 0 15 0;
+        padding: 2 10 2 10;
+      }
+      ```
+
+    since we'll have a few things in this folder, make it easier to load them by creating a barrel `index.ts`:
+
+      ```typescript
+      export * from './customer-center.component';
+      ```
+
+    go back and update `index.html` for Office UI Fabric:
+
+      ```html
+      <!-- [[SNIPPET]] ACD-05 -->
+      <link rel="stylesheet" href="/vendor/office-ui-fabric/dist/css/fabric.min.css">
+      <link rel="stylesheet" href="/vendor/office-ui-fabric/dist/css/fabric.components.min.css">
+      ```
+
+1. update `app.component.ts` to include the new child component for customer center
 
     ```typescript
-    import { Injectable } from '@angular/core';
+    import { Component } from '@angular/core';
 
-    @Injectable()
-    export class LogService {
-      public category: string = '';
-      private LOG_PREFIX: string = 'ng2MiniCrm';
-
-      constructor () {}
-
-      // [[SNIPPET]] ACD-02-logservice.ts
-    }
+    @Component({
+      moduleId: module.id,
+      selector: 'my-app',
+      template: `<minicrm-customer-center></minicrm-customer-center>`
+    })
+    export class AppComponent { }
     ```
 
-  - update `main.ts` to use it:
+    update `app.module.ts` in order to use it, need to inject it into the root module:
 
     ```typescript
-    import { LogService } from './services/logService';
+    import { CustomerCenterComponent } from './customers/index';
 
     ...
 
-    constructor(private logService: LogService) {}
-
-    ...
-
-    # acd-02
-    private initOfficeAddin(): void {
-      // >>>>> ADD THIS <<<<<
-      this.logService.info('addin loaded');
-      // ^^^^^^^^^^^^^^^^^^^^
-
-      Office.initialize = (reason: Office.InitializationReason) => {
-
-        // >>>>> ADD THIS <<<<<
-        this.logService.info('initializing Office.js');
-        // ^^^^^^^^^^^^^^^^^^^^
-
-        // bootstrap the angular app
-        bootstrap(AppComponent)
-          // >>>>> ADD THIS <<<<<
-          .then(success => this.logService.info('ng2 bootstrap success', success))
-          .catch(error => this.logService.error('ng2 bootstrap error', error));
-          // ^^^^^^^^^^^^^^^^^^^^
-      };
-    }
-
-    ...
-
-    let logService: LogService = new LogService();
-    logService.category = 'bootstrap';
-    ```
-
-1. build first component: `/customers/customer-center.component.ts`
-
-  ```typescript
-  import { Component, OnInit } from '@angular/core';
-
-  import { LogService } from '../services/logService';
-
-  @Component({
-    moduleId: module.id,
-    selector: 'minicrm-customer-center',
-    templateUrl: 'customer-center.component.html',
-    styleUrls: ['customer-center.component.css']
-  })
-  export class CustomerCenterComponent implements OnInit {
-    constructor(private logService: LogService) { }
-
-    public ngOnInit() {
-      this.logService.info('ngOnInit: CustomerCenterComponent');
-    }
-  }
-  ```
-
-  ```html
-  <!-- [[SNIPPET]] ACD-03 -->
-  <div id="addinHeading"
-      class='ms-font-xl ms-bgColor-themePrimary ms-fontColor-white'>
-    <div>Possible customers found in this email...</div>
-  </div>
-  ```
-
-  ```css
-  /* [[SNIPPET]] ACD-04 */
-  #addinHeading {
-    margin: 0 0 15 0;
-    padding: 2 10 2 10;
-  }
-  ```
-
-  go back and update `index.html` for Office UI Fabric
-
-  ```html
-  <!-- [[SNIPPET]] ACD-05 -->
-  <link rel="stylesheet" href="/vendor/office-ui-fabric/dist/css/fabric.min.css">
-  <link rel="stylesheet" href="/vendor/office-ui-fabric/dist/css/fabric.components.min.css">
-  ```
-
-1. update `app.component.ts` to:
-
-  ```typescript
-  import { Component } from '@angular/core';
-
-  import { LogService } from './services/logService';
-  import { CustomerCenterComponent } from './customers/customer-center.component';
-
-  @Component({
-    moduleId: module.id,
-    selector: 'my-app',
-    directives: [
+    declarations: [
+      AppComponent,
+      #### ADD THIS:
       CustomerCenterComponent
+      #### ^^^^^^^^^
     ],
-    providers: [
-      LogService
-    ],
-    template: `<minicrm-customer-center></minicrm-customer-center>`
-  })
-  export class AppComponent {
-    constructor() { }
-  }
-  ```
+    ```
 
 1. test it!
 
-1. add two more services, `officeService.ts` & `crmService.ts` ... explain
-  - [[SNIPPET]] acd-10: `officeService.ts`
-  - [[SNIPPET]] acd-11: `crmService.ts`
+1. add two services, `officeService.ts` & `crmService.ts` ... explain
 
-  - because `crmService.ts` uses HTTP, go back to `main.ts` and inject it into the whole app
+    - create new folder `/src/client/app/services`
+    - [[SNIPPET]] acd-10: `officeService.ts`
+    - [[SNIPPET]] acd-11: `crmService.ts`
+    - create a barrel `index.ts`
 
       ```typescript
-      import { HTTP_PROVIDERS } from '@angular/http';
-
-      ...
-
-      bootstrap(AppComponent, [HTTP_PROVIDERS])
+      export * from './crmService';
+      export * from './officeService';
       ```
 
-    inject them into the whole customer module... update `customer-center.component.ts`
+    - because `crmService.ts` uses HTTP, go back to `app.module.ts` and inject it into the whole root module:
+
+        ```typescript
+        import { HttpModule } from '@angular/http';
+
+        ...
+
+        imports: [
+          BrowserModule,
+          #### ADD THIS:
+          HttpModule
+          #### ^^^^
+        ],
+        ```
+
+      also inject the two new services into the root module `app.module.ts`:
 
       ```typescript
-      import { OfficeService } from '../services/officeService';
-      import { CrmService } from '../services/crmService';
+      import {
+        CrmService,
+        OfficeService
+      } from './services/index';
 
       ...
 
-      providers: [
-        OfficeService,
-        CrmService
-      ],
+      @NgModule({
+        #### ADD THIS:
+        providers: [
+          CrmService,
+          OfficeService
+        ]
+        #### ^^^^
+      })
       ```
 
 1. add a new list component: 
-  - [[SNIPPET]] acd-06: `customer-list.component.ts`
-  - [[SNIPPET]] acd-07: `customer-list.component.html`
-  - [[SNIPPET]] acd-08: `customer-list.component.css`
+
+    - [[SNIPPET]] acd-06: `customer-list.component.ts`
+    - [[SNIPPET]] acd-07: `customer-list.component.html`
+    - [[SNIPPET]] acd-08: `customer-list.component.css`
+
 1. update the databinding in the view with the public item:
-  - `*ngFor` on opening `<div>`: `let customer of lookupCandidates`
-  - `{{getCustomerInitials(customer)}}`
+    - on opening `<div>`, make repeating: 
+    
+      ```html
+      <div *ngFor="let customer of lookupCandidates"
+      ```
+
+    - line ~6, for initials:
+
+      ```html
+      <div class="ms-Persona-initials ms-Persona-initials--blue">{{getCustomerInitials(customer)}}</div>
+      ```
+    
+    - update details for contact
+      - `{{customer.name}}`
+      - `{{customer.title}}`
+      - `{{customer.companyName}}`
+      - `{{customer.phone}}`
+
+1. go back and add the customer list to the it to the root module `customer-center.component.html`:
+
+    ```html
+    <!-- add this to the last line -->
+    <minicrm-customer-list></minicrm-customer-list>
+    ```
+
+    - add this to the root module: `app.module.ts`
 
     ```typescript
-    // [[SNIPPET]] acd-09
-    private getCustomerInitials(customer: ICustomer): string {
-      return customer.name.replace(/[a-z]/g, '').replace(' ', '');
-    }
+    import {
+      CustomerCenterComponent,
+      ### ADD THIS:
+      CustomerListComponent
+      ### ^^^^^
+    } from './customers/index';
     ```
-  - `{{customer.name}}`
-  - `{{customer.title}}`
-  - `{{customer.companyName}}`
-  - `{{customer.phone}}`
 
-1. go back and add it to the `customer-center.component.*`
-
-  ```typescript
-  import { CustomerListComponent } from './customer-list.component';
-
-  ...
-
-  directives: [CustomerListComponent],
-
-  ...
-
-  <minicrm-customer-list></minicrm-customer-list>
-  ```
-
-1. show VorlonJS
+1. show VorlonJS: `https://localhost:1337`

@@ -27,8 +27,7 @@
   "ACDEMO - 07 - customer-list.component.html":{
     "prefix": "acd-07-customer-list.component.html",
     "body": [
-      "<div *ngFor=\"let customer of lookupCandidates\"",
-      "      class=\"ms-PersonaCard customers\">",
+      "<div class=\"ms-PersonaCard customers\">",
       "  <div class=\"ms-PersonaCard-persona\">",
       "    <div class=\"ms-Persona ms-Persona--sm\">",
       "      <div class=\"ms-Persona-imageArea\">",

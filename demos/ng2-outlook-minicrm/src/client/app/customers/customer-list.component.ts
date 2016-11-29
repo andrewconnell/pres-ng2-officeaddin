@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LogService } from '../services/logService';
-import { OfficeService } from '../services/officeService';
-import { CrmService } from '../services/crmService';
+import {
+  CrmService,
+  OfficeService
+} from '../services/index';
 import { ICustomer } from '../../../shared/models/ICustomer';
 
 @Component({
   moduleId: module.id,
+  providers: [
+    CrmService,
+    OfficeService
+  ],
   selector: 'minicrm-customer-list',
-  templateUrl: 'customer-list.component.html',
-  styleUrls: ['customer-list.component.css']
+  styleUrls: ['customer-list.component.css'],
+  templateUrl: 'customer-list.component.html'
 })
 export class CustomerListComponent implements OnInit {
   /**
@@ -21,23 +26,20 @@ export class CustomerListComponent implements OnInit {
   /**
    * Creates new instance of CustomerListComponent.
    *
-   * @param  {Router} router           - DI by Angular
-   * @param  {LogService} logService   - DI by Angular
-   * @param  {OfficeService} officeService - DI by Angular
-   * @param  {CrmService} crmService   - DI by Angular
+   * @param  {OfficeService}  officeService - DI by Angular
+   * @param  {CrmService}     crmService    - DI by Angular
    */
-  constructor(private logService: LogService,
-              private officeService: OfficeService,
-              private crmService: CrmService) {
-  }
+  constructor(
+    private officeService: OfficeService,
+    private crmService: CrmService) { }
 
   /**
    * Called right after the directive's data-bound properties have been
    * checked for the first time, and before any of its children have been
    * checked. It is invoked only once when the directive is instantiated.
    */
-  public ngOnInit() {
-    this.logService.info('ngOnInit: CustomerListComponent');
+  public ngOnInit(): void {
+    console.log('ngOnInit: CustomerListComponent');
 
     // lookup customers from currently selected email
     this.loadMatchesFromEmail();

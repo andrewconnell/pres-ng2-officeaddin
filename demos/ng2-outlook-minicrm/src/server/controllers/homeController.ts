@@ -11,7 +11,7 @@ export class HomeController {
   /**
    * Setup routing for controller.
    */
-  public loadRoutes() {
+  public loadRoutes(): void {
     log('loading routes');
     // setup home route for application
     this.app.get('/', this.handleRootGet);
